@@ -2,35 +2,19 @@ module EasyEncryption
 
   module InstanceMethods
 
-    # encrypts a string. ex: "string".encrypt
-    def encrypt(cipher_key=nil)
-      @cipher_key = cipher_key if cipher_key
-      cipher.encrypt self
+    # encrypts a string
+    def encrypt
+      simple_box.encrypt self
     end
 
-    # decrypts a string. ex: "string".decrypt
-    def decrypt(cipher_key=nil)
-      @cipher_key = cipher_key if cipher_key
-      cipher.decrypt self
+    # decrypts a string
+    def decrypt
+      simple_box.decrypt self
     end
 
-    # setter to change the cipher key on an instance of String
-    def cipher_key=(cipher_key)
-      @cipher_key = cipher_key
-    end
-
-  private
-
-    # returns a Gibberish cipher
-    def cipher
-
-      if @cipher_key
-        # create/use a cipher in the context of a String instance
-        instance_exec @cipher_key, &EasyEncryption::CREATE_CIPHER
-      else
-        # use the singleton class's cipher
-        self.class.cipher
-      end
+    # references simple_box on the singleton class
+    def simple_box
+      self.class.simple_box
     end
   end
 end

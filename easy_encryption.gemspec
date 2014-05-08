@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Adam Ervans"]
   spec.email         = ["aervans@gmail.com"]
   spec.description   = %q{Check the github page for a detailed description}
-  spec.summary       = %q{Adds easy to use encrypt and decrypt methods to strings.}
-  spec.homepage      = "https://github.com/arthrex/easy-encryption"
+  spec.summary       = %q{Adds easy to use encrypt and decrypt methods to string instances.}
+  spec.homepage      = "https://github.com/aervans/easyencryption"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
@@ -19,8 +19,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency "bundler", "~> 1.3"
-  spec.add_development_dependency "rake"
-  spec.add_development_dependency "rspec"
-  spec.add_development_dependency "pry"
-  spec.add_dependency "gibberish"
+  spec.add_development_dependency "rake", "~> 10.1.0"
+  spec.add_development_dependency "rspec", "~> 2.14.1"
+  spec.add_dependency "rbnacl", "~> 3.0.0"
 end

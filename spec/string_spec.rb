@@ -4,70 +4,31 @@ require 'spec_helper'
 describe String do
 
   before(:all) do 
-    EasyEncryption.setup 'default_password'
+    EasyEncryption.setup 'test'
   end
 
-  let(:default_password) { EasyEncryption.cipher_key }
-  let(:password) { 'password' }
   let(:text) { 'foo' }
-  let(:console_text) { `echo "foo"` }
+  let(:encrypted_text) {
+    simple_box = RbNaCl::SimpleBox.from_secret_key(RbNaCl::Hash.sha256('test'))
+    simple_box.encrypt text
+  }
 
   describe '#encrypt' do
 
-    context 'with cipher key set on String' do
+    context 'with a string instance' do
 
-      it 'encrypts a string' do
-        encrypted = text.encrypt 
-        decrypted = `echo "#{encrypted}" | openssl enc -d -aes-256-cbc -a -k "#{default_password}"`
-        decrypted.should eql(text)
-      end
-    end
-
-    context 'with cipher key set on a String instance' do
-
-      it 'encrypts a string' do
-        text.cipher_key = password
-        encrypted = text.encrypt
-        decrypted = `echo "#{encrypted}" | openssl enc -d -aes-256-cbc -a -k "#{password}"`
-        decrypted.should eql(text)
-      end
-    end
-    
-    context 'with cipher key passed to a String instance' do
-
-      it 'encrypts a string' do
-        encrypted = text.encrypt password
-        decrypted = `echo "#{encrypted}" | openssl enc -d -aes-256-cbc -a -k "#{password}"`
-        decrypted.should eql(text)
+      it 'encrypts a string instance' do
+        text.encrypt.encoding.should eql(Encoding::BINARY)
       end
     end
   end
 
   describe '#decrypt' do
 
-    context 'with cipher key set on String' do
+    context 'with a string instance' do
 
-      it 'decrypts a string' do 
-        encrypted = `echo "foo" | openssl enc -aes-256-cbc -a -k "#{default_password}"`
-        decrypted = encrypted.decrypt.chomp
-        decrypted.should eql('foo')
-      end
-    end
-
-    context 'with cipher key set on a String instance' do
-
-      it 'decrypts a string' do
-        encrypted = `echo "foo" | openssl enc -aes-256-cbc -a -k "#{password}"`
-        encrypted.cipher_key = password
-        encrypted.decrypt.should eql(console_text)
-      end
-    end
-
-    context 'with cipher key passed to a String instance' do
-
-      it 'decrypts a string' do
-        encrypted = `echo "foo" | openssl enc -aes-256-cbc -a -k "#{password}"`
-        encrypted.decrypt(password).should eql(console_text)
+      it 'decrypts a string instance' do
+        encrypted_text.decrypt.should eql(text)
       end
     end
   end

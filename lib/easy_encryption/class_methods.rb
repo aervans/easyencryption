@@ -2,10 +2,13 @@ module EasyEncryption
 
   module ClassMethods
 
-    # returns a Gibberish cipher
-    def cipher
-      # create/use a cipher in the context of the String singleton
-      instance_exec EasyEncryption.cipher_key, &EasyEncryption::CREATE_CIPHER
+    attr_reader :simple_box
+
+    # creates a simple_box using the passed key
+    #
+    #   created_simple_box('secret')
+    def create_simple_box(key)
+      @simple_box ||= RbNaCl::SimpleBox.from_secret_key(RbNaCl::Hash.sha256(key))
     end
   end
 end
